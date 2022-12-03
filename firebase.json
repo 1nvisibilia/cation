@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "cation",
     "public": "dist",
     "ignore": [
       "firebase.json",
