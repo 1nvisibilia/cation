@@ -1,85 +1,51 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { reactive } from 'vue';
+import LoginSignUp from './components/LoginSignUp.vue';
+import Auth from './utils/auth';
+// import { RouterLink, RouterView } from 'vue-router';
+// import HelloWorld from './components/HelloWorld.vue';
+const state = reactive({
+    drawer: false,
+    loginPopup: false
+});
+
+
+function googleLogin() {
+    return Auth.googleSignIn();
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <v-app>
+        <v-app-bar title="Application">
+            <template v-slot:prepend>
+                <v-app-bar-nav-icon variant="text" @click="(state.drawer = !state.drawer)"></v-app-bar-nav-icon>
+            </template>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+            <template v-slot:append>
+                <v-btn icon="mdi-account-circle-outline" @click="(state.loginPopup = !state.loginPopup)"></v-btn>
+                <v-btn icon="mdi-dots-vertical"></v-btn>
+            </template>
+        </v-app-bar>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
+        <v-navigation-drawer v-model="state.drawer" temporary>
+            test
+        </v-navigation-drawer>
 
-  <RouterView />
+        <v-main>
+            <div class="text-h1 pa-4" style="text-align: center">Cation</div>
+            <v-file-input prepend-icon="" prepend-inner-icon="mdi-paperclip" label="Your Audio File"
+                variant="underlined"></v-file-input>
+            <audio src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" controls></audio>
+            <v-btn @click="googleLogin">Sign in with Google</v-btn>
+
+            <v-dialog v-model="state.loginPopup">
+                <login-sign-up></login-sign-up>
+            </v-dialog>
+        </v-main>
+    </v-app>
+
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>
