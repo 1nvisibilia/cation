@@ -1,18 +1,13 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import LoginSignUp from './components/LoginSignUp.vue';
-import Auth from './utils/auth';
+import ListenerPanel from './components/listener/ListenerPanel.vue';
 // import { RouterLink, RouterView } from 'vue-router';
 // import HelloWorld from './components/HelloWorld.vue';
 const state = reactive({
     drawer: false,
     loginPopup: false
 });
-
-
-function googleLogin() {
-    return Auth.googleSignIn();
-}
 </script>
 
 <template>
@@ -33,16 +28,16 @@ function googleLogin() {
         </v-navigation-drawer>
 
         <v-main>
-            <div class="text-h1 pa-4" style="text-align: center">Cation</div>
+            <!-- <div class="text-h1 pa-4" style="text-align: center">Cation</div>
             <v-file-input prepend-icon="" prepend-inner-icon="mdi-paperclip" label="Your Audio File"
                 variant="underlined"></v-file-input>
-            <audio src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" controls></audio>
-            <v-btn @click="googleLogin">Sign in with Google</v-btn>
-
-            <v-dialog v-model="state.loginPopup">
-                <login-sign-up></login-sign-up>
-            </v-dialog>
+            <audio src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" controls></audio> -->
+            <listener-panel></listener-panel>
         </v-main>
+
+        <v-dialog v-model="state.loginPopup">
+            <login-sign-up></login-sign-up>
+        </v-dialog>
     </v-app>
 
 </template>
