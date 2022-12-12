@@ -1,27 +1,33 @@
 import fireBaseApp from '../firebase-service';
-import { signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, type UserCredential, OAuthCredential, getAuth, type Auth } from 'firebase/auth';
-
-import RTDB from '../firebase-service/database';
+import { signInWithPopup, GoogleAuthProvider, GithubAuthProvider, type UserCredential, OAuthCredential, getAuth, type Auth } from 'firebase/auth';
 
 const auth: Auth = getAuth(fireBaseApp);
 const googleProvider: GoogleAuthProvider = new GoogleAuthProvider();
+const gitHubProvider: GithubAuthProvider = new GithubAuthProvider();
 
-async function googleSignIn() {
+async function googleSignIn(): Promise<UserCredential> {
     const result: UserCredential = await signInWithPopup(auth, googleProvider);
     const credential: OAuthCredential | null = GoogleAuthProvider.credentialFromResult(result);
 
     console.log(result, credential);
 
-    if (!credential) return;
+    // if (!credential) return;
+    return result;
+}
 
-    const userData = await RTDB.getUserData(result.user.uid);
-    console.log(userData);
-    
+async function gitHubSignIn(): Promise<UserCredential> {
+    const result: UserCredential = await signInWithPopup(auth, gitHubProvider);
+    const credential = GithubAuthProvider.credentialFromResult(result);
+
+    console.log(result, credential);
+    return result;
 }
 
 export default {
-    googleSignIn,
-    facebookSignIn: () => { },
-    normalSignIn: () => { },
-    normalRegister: () => { }
+    signIn: {
+        Google: googleSignIn,
+        GitHub: gitHubSignIn,
+        // 'normal': () => { }
+    },
+    normalRegister: () => { },
 };

@@ -8,6 +8,10 @@ const state = reactive({
     drawer: false,
     loginPopup: false
 });
+
+function closeLoginSignUpDialog() {
+    state.loginPopup = false;
+}
 </script>
 
 <template>
@@ -36,7 +40,7 @@ const state = reactive({
         </v-main>
 
         <v-dialog v-model="state.loginPopup">
-            <login-sign-up></login-sign-up>
+            <login-sign-up @LoginSignUpComplete="closeLoginSignUpDialog"></login-sign-up>
         </v-dialog>
     </v-app>
 
