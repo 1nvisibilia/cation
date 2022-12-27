@@ -2,12 +2,12 @@
 import Auth from '../auth';
 import type { UserCredential } from '@firebase/auth';
 import RTDB from '../firebase-service/database';
-import { usePlaylistStore } from '../stores/playlist';
+import { useCentralStore } from '../stores/central';
 
 type Oauth = 'Google' | 'GitHub';
 
 const emit = defineEmits(['LoginSignUpComplete']);
-const playlistStore = usePlaylistStore();
+const centralStore = useCentralStore();
 
 const loginTypes = [
     { icon: 'google', name: 'Google' },
@@ -30,7 +30,7 @@ async function login(oauthType: Oauth) {
 
     console.log(userData);
 
-    playlistStore.setPlaylist(userData.playlist || []);
+    centralStore.userInit(userData);
 
     emit('LoginSignUpComplete');
 }

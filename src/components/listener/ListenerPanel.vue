@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import AddMusic from './AddMusic.vue';
-import { usePlaylistStore } from '../../stores/playlist';
+import { useCentralStore } from '../../stores/central';
 
-const playlistStore = usePlaylistStore();
+const centralStore = useCentralStore();
 </script>
 
 <template>
@@ -12,7 +12,7 @@ const playlistStore = usePlaylistStore();
         </v-card>
         <v-card width="400" height="500" class="pa-6">
             <v-list density="compact" class="pa-0">
-                <v-list-item v-for="(item, i) in playlistStore.fullPlaylist" :key="i" :value="item"
+                <v-list-item v-for="(item, i) in centralStore.fullPlaylist" :key="i" :value="item"
                     active-color="primary"></v-list-item>
             </v-list>
             <add-music></add-music>

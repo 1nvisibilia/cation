@@ -1,11 +1,6 @@
-import { getDatabase, ref, set, get, child } from 'firebase/database';
+import { getDatabase, ref, set, get, child, push } from 'firebase/database';
+import type { User, Track } from '../types';
 import fireBaseApp from '..';
-
-type User = {
-    id: string,
-    name: string
-    playlist: Array<string> | null,
-};
 
 const rtdb = getDatabase(fireBaseApp);
 const usersTable = ref(rtdb, 'users/');
@@ -34,7 +29,20 @@ async function createUserData(userId: string, userName: string): Promise<User> {
     };
 }
 
+async function addTrack(userId: string | null, track: Track) {
+    if (userId === null) {
+        console.error('not logged in');
+        return;
+    }
+
+    const playList = child(usersTable, `${userId}/playlist`);
+    const newTrack = push(playList);
+    set(newTrack, track);
+    console.log(track);
+}
+
 export default {
     getUserData,
-    createUserData
+    createUserData,
+    addTrack
 };
