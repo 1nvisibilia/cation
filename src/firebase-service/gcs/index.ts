@@ -1,14 +1,19 @@
 import { getStorage, ref, uploadBytes, type UploadResult, getDownloadURL } from 'firebase/storage';
 import fireBaseApp from '../index';
 import * as Uuid from 'uuid';
+import type { GCSUploadResult } from '../types';
 
 const storage = getStorage(fireBaseApp);
 const audioRef = ref(storage, 'audio/');
 
-async function uploadAudio(file: File): Promise<string> {
+async function uploadAudio(file: File): Promise<GCSUploadResult> {
     const fileUniqueName: string = Uuid.v4();
     await uploadBytes(ref(audioRef, fileUniqueName), file);
-    return fileUniqueName;
+    const srcUrl = await downloadAudioURL(fileUniqueName);
+    return {
+        address: fileUniqueName,
+        srcUrl: srcUrl
+    };
 }
 
 async function downloadAudioURL(address: string): Promise<string> {

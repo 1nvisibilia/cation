@@ -3,7 +3,8 @@ export type Provider = 'gcs';
 export type Track = {
     name: string,
     provider: Provider,
-    address: string
+    address: string,
+    srcUrl: string | null
 };
 
 export type User = {
@@ -12,3 +13,7 @@ export type User = {
     playlist: Array<Track> | null,
 };
 
+export type GCSUploadResult = {
+    address: string,
+    srcUrl: string | null
+};

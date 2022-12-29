@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-
+import RTDB from '../firebase-service/database';
+import type { DataSnapshot } from 'firebase/database';
 import type { User, Track } from '../firebase-service/types';
 
 export const useCentralStore = defineStore('central', {
@@ -10,7 +11,8 @@ export const useCentralStore = defineStore('central', {
                 userId: null as string | null,
             },
             playlist: [] as Track[],
-            currentAudioIndex: 0
+            currentAudioIndex: 0,
+            srcUrl: null as string | null
         };
     },
     getters: {
@@ -19,13 +21,33 @@ export const useCentralStore = defineStore('central', {
         },
         user(state) {
             return state.authUser;
+        },
+        currentTrackSrc(state) {
+            return state.srcUrl;
         }
     },
     actions: {
-        userInit(userData: User) {
+        userInit(userData: User) {            
             this.playlist = userData.playlist || [];
             this.authUser.userId = userData.id;
             this.authUser.userName = userData.name;
+
+            // register on change listeners
+            RTDB.registerListener(userData.id, (newTracks: DataSnapshot) => {
+                this.playlist = Object.values(newTracks.val());
+            })
+        },
+        userDestroy() {
+            if (this.authUser.userId) {
+                RTDB.deleteListener(this.authUser.userId);
+                this.authUser.userId = null;
+            }
+            this.authUser.userName = null;
+            this.playlist = [];
+        },
+        setTrack(index: number) {
+            this.currentAudioIndex = index;
+            this.srcUrl = this.playlist[index].srcUrl;
         }
     }
 });

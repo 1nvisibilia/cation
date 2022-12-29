@@ -22,21 +22,21 @@ function setFile(value: File[]) {
 }
 
 async function upload() {
-    // user must be logged in
-    if (state.uploadedFile) {
-        const resultedName = await GCS.uploadAudio(state.uploadedFile);
+    if (state.uploadedFile && centralStore.user.userId) {
+        const { address, srcUrl } = await GCS.uploadAudio(state.uploadedFile);
 
         RTDB.addTrack(centralStore.user.userId, {
             name: state.musicName,
             provider: 'gcs',
-            address: resultedName
+            address: address,
+            srcUrl: srcUrl
         });
     }
 }
 </script>
 
 <template>
-    <v-btn block @click="(state.addMusicDialog = true)">Add</v-btn>
+    <v-btn class="mt-4" block @click="(state.addMusicDialog = true)">Add</v-btn>
     <v-dialog v-model="state.addMusicDialog">
         <v-card width="500" class="mx-auto pa-6">
             <div class="text-h5 text-center">You can add a new music by</div>
