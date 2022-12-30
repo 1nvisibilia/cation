@@ -28,8 +28,6 @@ async function login(oauthType: Oauth) {
         userData = await RTDB.createUserData(result.user.uid, userName);
     }
 
-    console.log(userData);
-
     centralStore.userInit(userData);
 
     emit('LoginSignUpComplete');

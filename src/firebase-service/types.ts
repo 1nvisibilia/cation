@@ -4,7 +4,8 @@ export type Track = {
     name: string,
     provider: Provider,
     address: string,
-    srcUrl: string | null
+    srcUrl: string | null,
+    snapshotHash: string
 };
 
 export type User = {

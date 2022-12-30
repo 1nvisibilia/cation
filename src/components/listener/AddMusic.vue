@@ -9,7 +9,8 @@ const state = reactive({
     addMusicDialog: false,
     externalLink: '',
     uploadedFile: undefined as File | undefined,
-    musicName: ''
+    musicName: '',
+    uploading: false
 });
 
 const disableUpload = computed((): boolean => {
@@ -23,14 +24,20 @@ function setFile(value: File[]) {
 
 async function upload() {
     if (state.uploadedFile && centralStore.user.userId) {
+        state.uploading = true;
         const { address, srcUrl } = await GCS.uploadAudio(state.uploadedFile);
 
-        RTDB.addTrack(centralStore.user.userId, {
+        await RTDB.addTrack(centralStore.user.userId, {
             name: state.musicName,
             provider: 'gcs',
             address: address,
-            srcUrl: srcUrl
+            srcUrl: srcUrl,
+            snapshotHash: 'not mounted yet'
         });
+
+        state.uploading = false;
+        state.musicName = '';
+        state.addMusicDialog = false;
     }
 }
 </script>
@@ -56,7 +63,7 @@ async function upload() {
 
             <v-text-field :disabled="disableUpload" v-model="state.musicName" variant="underlined"
                 label="Music Title"></v-text-field>
-            <v-btn :disabled="disableUpload" @click="upload">Add</v-btn>
+            <v-btn :disabled="disableUpload" :loading="state.uploading" @click="upload">Add</v-btn>
         </v-card>
     </v-dialog>
 </template>

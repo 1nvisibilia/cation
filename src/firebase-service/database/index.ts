@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, get, child, push, onValue, off, type DataSnapshot } from 'firebase/database';
+import { getDatabase, ref, set, get, child, push, remove, onValue, off, type DataSnapshot } from 'firebase/database';
 import type { User, Track } from '../types';
 import fireBaseApp from '..';
 
@@ -10,12 +10,7 @@ async function getUserData(userId: string): Promise<User | null> {
     const snapshot = await get(userPath);
 
     if (snapshot.exists()) {
-        const value: User = snapshot.val();
-        return {
-            id: value.id,
-            name: value.name,
-            playlist: (Object.values(value.playlist || {} as object)) as Track[]
-        };
+        return snapshot.val();
     }
     return null;
 }
@@ -41,6 +36,10 @@ async function addTrack(userId: string, track: Track) {
     console.log(track);
 }
 
+async function removeTrack(userId: string, track: Track) {
+    await remove(child(usersTable, `${userId}/playlist/${track.snapshotHash}`));
+}
+
 function registerListener(userId: string, callback: (newTracks: DataSnapshot) => any) {
     onValue(child(usersTable, `${userId}/playlist`), callback);
 }
@@ -53,6 +52,7 @@ export default {
     getUserData,
     createUserData,
     addTrack,
+    removeTrack,
     registerListener,
     deleteListener
 };

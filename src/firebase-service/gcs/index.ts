@@ -1,4 +1,4 @@
-import { getStorage, ref, uploadBytes, type UploadResult, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, type UploadResult, getDownloadURL, deleteObject } from 'firebase/storage';
 import fireBaseApp from '../index';
 import * as Uuid from 'uuid';
 import type { GCSUploadResult } from '../types';
@@ -16,11 +16,16 @@ async function uploadAudio(file: File): Promise<GCSUploadResult> {
     };
 }
 
+async function deleteAudio(address: string) {
+    await deleteObject(ref(audioRef, address));
+}
+
 async function downloadAudioURL(address: string): Promise<string> {
     return await getDownloadURL(ref(audioRef, address));
 }
 
 export default {
     uploadAudio,
-    downloadAudioURL
+    downloadAudioURL,
+    deleteAudio
 }

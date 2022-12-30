@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import RTDB from '../firebase-service/database';
 import type { DataSnapshot } from 'firebase/database';
 import type { User, Track } from '../firebase-service/types';
+import { nameObjectToFlatArray } from '../utils/conversions';
 
 export const useCentralStore = defineStore('central', {
     state: () => {
@@ -28,14 +29,14 @@ export const useCentralStore = defineStore('central', {
     },
     actions: {
         userInit(userData: User) {            
-            this.playlist = userData.playlist || [];
+            this.playlist = userData.playlist ? nameObjectToFlatArray(userData.playlist) : [];
             this.authUser.userId = userData.id;
             this.authUser.userName = userData.name;
 
             // register on change listeners
             RTDB.registerListener(userData.id, (newTracks: DataSnapshot) => {
-                this.playlist = Object.values(newTracks.val());
-            })
+                this.playlist = nameObjectToFlatArray(newTracks.val());
+            });
         },
         userDestroy() {
             if (this.authUser.userId) {
