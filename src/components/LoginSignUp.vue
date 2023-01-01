@@ -16,9 +16,7 @@ const loginTypes = [
     { icon: 'microsoft', name: 'Microsoft' }
 ];
 
-async function login(oauthType: Oauth) {
-    console.log(oauthType);
-    
+async function login(oauthType: Oauth) {    
     const result: UserCredential = await Auth.signIn[oauthType]();
 
     let userData = await RTDB.getUserData(result.user.uid);
@@ -28,7 +26,7 @@ async function login(oauthType: Oauth) {
         userData = await RTDB.createUserData(result.user.uid, userName);
     }
 
-    centralStore.userInit(userData);
+    centralStore.userInit(userData, result.user);
 
     emit('LoginSignUpComplete');
 }

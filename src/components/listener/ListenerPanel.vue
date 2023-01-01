@@ -19,12 +19,14 @@ function play(index: number) {
 async function removeTrack(track: Track) {
     if (centralStore.user.userId) {
         const tempSrcUrl = track.srcUrl;
-        track.srcUrl = null;
-        await GCS.deleteAudio(track.address);
-        await RTDB.removeTrack(centralStore.user.userId, track);
-
-        // on error
-        // track.srcUrl = tempSrcUrl;
+        try {
+            track.srcUrl = null;
+            await GCS.deleteAudio(track.address);
+            await RTDB.removeTrack(centralStore.user.userId, track);
+        } catch (error) {
+            console.error(error);
+            track.srcUrl = tempSrcUrl;
+        }
     }
 }
 </script>
