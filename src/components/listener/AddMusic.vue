@@ -3,6 +3,7 @@ import { reactive, computed } from 'vue';
 import { useCentralStore } from '../../stores/central';
 import GCS from '../../firebase-service/gcs';
 import RTDB from '../../firebase-service/database';
+import type { Track } from '@/firebase-service/types';
 
 const centralStore = useCentralStore();
 const state = reactive({
@@ -31,9 +32,8 @@ async function upload() {
             name: state.musicName,
             provider: 'gcs',
             address: address,
-            srcUrl: srcUrl,
-            snapshotHash: 'not mounted yet'
-        });
+            srcUrl: srcUrl
+        } as Track); // override missing 'snapshotHash'
 
         state.uploading = false;
         state.musicName = '';
