@@ -33,7 +33,7 @@ async function facebookSignIn(): Promise<AuthData> {
     const result: UserCredential = await signInWithPopup(auth, facebookProvider);
     const credential = FacebookAuthProvider.credentialFromResult(result);
 
-    console.log(result, credential);
+    // console.log(result, credential);
 
     const rawResponse: any = JSON.parse((result as any)._tokenResponse.rawUserInfo);
 

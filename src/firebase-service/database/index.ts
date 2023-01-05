@@ -33,7 +33,6 @@ async function addTrack(userId: string, track: Track) {
     const playList = child(usersTable, `${userId}/playlist`);
     const newTrack = push(playList);
     set(newTrack, track);
-    console.log(track);
 }
 
 async function removeTrack(userId: string, track: Track) {
