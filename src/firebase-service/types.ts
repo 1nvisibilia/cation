@@ -18,3 +18,9 @@ export type GCSUploadResult = {
     address: string,
     srcUrl: string | null
 };
+
+export type AuthData = {
+    id: string,
+    name: string | null,
+    avatarURL: string | null
+};

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Auth from '../auth';
-import type { UserCredential } from '@firebase/auth';
 import RTDB from '../firebase-service/database';
 import { useCentralStore } from '../stores/central';
+import type { AuthData } from '../firebase-service/types';
 
-type Oauth = 'Google' | 'GitHub';
+type Oauth = 'Google' | 'GitHub' | 'Facebook';
 
 const emit = defineEmits(['LoginSignUpComplete']);
 const centralStore = useCentralStore();
@@ -16,17 +16,17 @@ const loginTypes = [
     { icon: 'microsoft', name: 'Microsoft' }
 ];
 
-async function login(oauthType: Oauth) {    
-    const result: UserCredential = await Auth.signIn[oauthType]();
+async function login(oauthType: Oauth) {
+    const result: AuthData = await Auth.signIn[oauthType]();
 
-    let userData = await RTDB.getUserData(result.user.uid);
+    let userData = await RTDB.getUserData(result.id);
 
     if (!userData) {
-        const userName: string = (result.user.displayName || result.user.email as string);
-        userData = await RTDB.createUserData(result.user.uid, userName);
+        const userName: string = result.name || 'new user name';
+        userData = await RTDB.createUserData(result.id, userName);
     }
 
-    centralStore.userInit(userData, result.user);
+    centralStore.userInit(userData, result);
 
     emit('LoginSignUpComplete');
 }
