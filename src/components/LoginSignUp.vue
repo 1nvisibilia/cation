@@ -13,7 +13,7 @@ const loginTypes = [
     { icon: 'google', name: 'Google' },
     { icon: 'facebook', name: 'Facebook' },
     { icon: 'github', name: 'GitHub' },
-    { icon: 'microsoft', name: 'Microsoft' }
+    // { icon: 'microsoft', name: 'Microsoft' }
 ];
 
 async function login(oauthType: Oauth) {
