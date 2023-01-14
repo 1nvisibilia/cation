@@ -1,3 +1,5 @@
-# Singular
+# Cation
+The app can be visited at:
+https://cation.web.app/
 
-The backend express microservice can be found at: https://github.com/1nvisibilia/singular-backend
+Built using Firebase, TypeScript, Vue3, Vuetify, Pinia.
